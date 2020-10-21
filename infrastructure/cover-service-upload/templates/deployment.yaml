@@ -17,7 +17,8 @@ spec:
     metadata:
       labels:
         app: {{ .Release.Name }}-upload
-        networking/allow-internet-access: "true"
+        networking/allow-ingress-access: "true"
+        networking/allow-internet-access: "{{ .Release.Name }}"
       annotations:
         # Ensure rolling updates on config changes.
         checksum/config: {{ include (print $.Template.BasePath "/configmap.yaml") . | sha256sum }}
