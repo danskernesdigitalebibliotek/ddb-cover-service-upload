@@ -1,0 +1,21 @@
+---
+kind: NetworkPolicy
+apiVersion: networking.k8s.io/v1
+metadata:
+  namespace: {{ .Release.Namespace }}
+  name: {{ .Release.Name }}-network-policy
+spec:
+  podSelector:
+    matchLabels:
+      networking/allow-internet-access: "{{ .Release.Name }}"
+  policyTypes:
+    - Egress
+  egress:
+    - to:
+      ports:
+        # Allow SQL connections to the outside. It's not possible to use named external services in egress.
+        - protocol: TCP
+          port: 3306
+        # Need to communicate with open-platform and adgangsplatformen.
+        - protocol: TCP
+          port: 443

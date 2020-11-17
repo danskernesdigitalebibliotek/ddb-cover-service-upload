@@ -17,7 +17,9 @@ spec:
     metadata:
       labels:
         app: {{ .Release.Name }}-upload
-        tier: frontend
+        networking/allow-ingress-access: "true"
+        networking/allow-monitoring-access: "true"
+        networking/allow-internet-access: "{{ .Release.Name }}"
       annotations:
         # Ensure rolling updates on config changes.
         checksum/config: {{ include (print $.Template.BasePath "/configmap.yaml") . | sha256sum }}
@@ -122,6 +124,7 @@ spec:
                 name: {{ .Release.Name }}-nginx-config
           ports:
             - containerPort: 80
+              name: pod-http-port
         - name: nginx-exporter
           image: nginx/nginx-prometheus-exporter:{{ .Values.nginx.exporter.image.version }}
           imagePullPolicy: {{ .Values.app.image.imagePullPolicy }}
