@@ -20,6 +20,7 @@ class CoverUserUploadMessage
     private $imageUrl;
     private $accrediting;
     private $vendorId;
+    private $requestId;
 
     /**
      * @return string
@@ -137,6 +138,32 @@ class CoverUserUploadMessage
     public function setVendorId($vendorId): self
     {
         $this->vendorId = $vendorId;
+
+        return $this;
+    }
+
+    /**
+     * Get request id (which is unique for the whole request).
+     *
+     * @return string
+     *   The request id
+     */
+    public function getRequestId()
+    {
+        return $this->requestId;
+    }
+
+    /**
+     * Set request id (which is unique for the whole request).
+     *
+     * @param string $requestId
+     *   The request id (normally found in HTTP_X_REQUEST_ID)
+     *
+     * @return CoverUserUploadMessage
+     */
+    public function setRequestId(string $requestId): self
+    {
+        $this->requestId = $requestId;
 
         return $this;
     }
