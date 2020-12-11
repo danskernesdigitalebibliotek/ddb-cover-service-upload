@@ -24,15 +24,18 @@ final class MaterialPostWriteSubscriber implements EventSubscriberInterface
 {
     private $bus;
     private $storage;
+    private $requestId;
 
     /**
      * MaterialPostWriteSubscriber constructor.
      *
+     * @param string $bindRequestId
      * @param MessageBusInterface $bus
      * @param StorageInterface $storage
      */
-    public function __construct(MessageBusInterface $bus, StorageInterface $storage)
+    public function __construct(string $bindRequestId, MessageBusInterface $bus, StorageInterface $storage)
     {
+        $this->requestId = $bindRequestId;
         $this->bus = $bus;
         $this->storage = $storage;
     }
@@ -79,6 +82,7 @@ final class MaterialPostWriteSubscriber implements EventSubscriberInterface
                 $message->setOperation(VendorState::INSERT);
                 $message->setImageUrl($url);
                 $message->setAccrediting($material->getAgencyId());
+                $message->setRequestId($this->requestId);
                 $this->bus->dispatch($message);
                 break;
         }

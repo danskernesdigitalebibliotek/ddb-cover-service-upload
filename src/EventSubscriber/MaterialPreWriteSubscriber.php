@@ -26,6 +26,7 @@ final class MaterialPreWriteSubscriber implements EventSubscriberInterface
 {
     private $bus;
     private $storage;
+    private $requestId;
 
     /** @var User */
     private $user;
@@ -33,12 +34,14 @@ final class MaterialPreWriteSubscriber implements EventSubscriberInterface
     /**
      * MaterialPreWriteSubscriber constructor.
      *
+     * @param string $bindRequestId
      * @param MessageBusInterface $bus
      * @param StorageInterface $storage
      * @param Security $security
      */
-    public function __construct(MessageBusInterface $bus, StorageInterface $storage, Security $security)
+    public function __construct(string $bindRequestId, MessageBusInterface $bus, StorageInterface $storage, Security $security)
     {
+        $this->requestId = $bindRequestId;
         $this->bus = $bus;
         $this->storage = $storage;
 
@@ -79,6 +82,7 @@ final class MaterialPreWriteSubscriber implements EventSubscriberInterface
                 $message->setIdentifierType($item->getIsType());
                 $message->setIdentifier($item->getIsIdentifier());
                 $message->setOperation(VendorState::DELETE);
+                $message->setRequestId($this->requestId);
 
                 $this->bus->dispatch($message);
                 break;
